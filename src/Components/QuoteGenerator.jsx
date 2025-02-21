@@ -6,11 +6,12 @@ function QuoteGenerator() {
 
   const fetchQuote = async () => {
     try {
-      let { data, error } = await supabase.from("quotes").select("*").order("id", { ascending: false }).limit(1);
+      let response = await fetch("http://localhost:3000/api/quotes/random"); // Appel à Express.js
+      let data = await response.json();
+      console.log(data);
 
-      if (error) throw error;
-      if (data.length > 0) {
-        setQuote(data[0]); // On prend le premier élément du tableau
+      if (data) {
+        setQuote(data); // Stocker la citation reçue
       } else {
         console.warn("Aucune citation trouvée !");
       }
@@ -29,6 +30,8 @@ function QuoteGenerator() {
         <>
           <p>{quote.text || "Pas de texte disponible"}</p>
           <p>{quote.author || "Auteur inconnu"}</p>
+          <p>{quote.nationality} </p>
+          <img src={quote.image_url} alt="France flag" />
         </>
       ) : (
         <p>Chargement...</p>
